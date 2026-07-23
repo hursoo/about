@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Soo Hur — Research / 허수 연구 소개</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500;600;700&display=swap">
+<style>
+  :root{
+    --paper:#F1F2EE; --card:#FBFBF9;
+    --ink:#1B211D; --ink-soft:#4C554E; --ink-faint:#727C74;
+    --line:#D9DBD3; --accent:#2E6E5C; --accent-ink:#245849; --accent-soft:#E5ECE6;
+    --serif:'Iowan Old Style','Palatino Linotype',Palatino,'Book Antiqua',Georgia,'Noto Serif KR','Nanum Myeongjo',serif;
+    --sans:ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Noto Serif KR','Nanum Myeongjo','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+    --mono:ui-monospace,'SF Mono','JetBrains Mono',Menlo,Consolas,'Noto Serif KR','Nanum Myeongjo','Apple SD Gothic Neo',monospace;
+    --cjk:'Noto Serif KR','Nanum Myeongjo',serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --paper:#141813; --card:#191E18;
+      --ink:#E8EAE3; --ink-soft:#AAB2A8; --ink-faint:#7C857C;
+      --line:#2A312B; --accent:#74BBA1; --accent-ink:#8ECAB4; --accent-soft:#1E2A24;
+    }
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;}
+  body{background:var(--paper);color:var(--ink);font-family:var(--serif);line-height:1.75;-webkit-font-smoothing:antialiased;word-break:keep-all;overflow-wrap:break-word;}
+  .wrap{max-width:37rem;margin:0 auto;padding:clamp(1.5rem,5vw,3rem) clamp(1.25rem,5vw,2.5rem) 3rem;}
+
+  #to-ko{position:absolute;opacity:0;width:1px;height:1px;}
+  .topbar{display:flex;justify-content:flex-end;margin-bottom:1.6rem;}
+  .toggle{display:inline-flex;gap:2px;border:1px solid var(--line);border-radius:999px;
+    padding:3px;background:var(--card);cursor:pointer;user-select:none;}
+  .toggle span{font-family:var(--mono);font-size:.74rem;letter-spacing:.04em;color:var(--ink-soft);
+    padding:.34rem .8rem;border-radius:999px;transition:background .18s,color .18s;}
+  #to-ko:not(:checked) ~ .topbar .toggle .en{background:var(--accent);color:var(--paper);}
+  #to-ko:checked ~ .topbar .toggle .ko{background:var(--accent);color:var(--paper);}
+  #to-ko:focus-visible ~ .topbar .toggle{outline:2px solid var(--accent);outline-offset:2px;}
+
+  .lang-ko{display:none;}
+  #to-ko:checked ~ .content .lang-en{display:none;}
+  #to-ko:checked ~ .content .lang-ko{display:block;}
+
+  .eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 1.4rem;}
+  .name{font-size:clamp(2.1rem,7vw,2.8rem);line-height:1.04;margin:0;font-weight:600;letter-spacing:-.01em;}
+  .name .han{font-size:.5em;color:var(--ink-faint);font-weight:500;margin-left:.5em;letter-spacing:0;}
+  .roles{font-family:var(--sans);font-size:.94rem;color:var(--ink-soft);margin:.9rem 0 0;line-height:1.55;}
+  .roles b{color:var(--ink);font-weight:600;}
+  hr{border:0;height:1px;background:var(--line);margin:2.1rem 0;}
+  .lead{font-size:1.22rem;line-height:1.78;margin:0;font-weight:400;}
+  blockquote{margin:2.3rem 0;padding-left:1.15rem;border-left:2px solid var(--accent);}
+  blockquote p{font-size:1.5rem;line-height:1.34;margin:0;letter-spacing:-.01em;}
+  blockquote .src{font-family:var(--sans);font-size:.82rem;color:var(--ink-faint);margin:.7rem 0 0;}
+  section{margin:2.1rem 0;}
+  .label{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);margin:0 0 .55rem;}
+  .label .mark{color:var(--accent);}
+  section p{margin:0;font-size:1.03rem;color:var(--ink);line-height:1.82;}
+  .tool{font-family:var(--mono);font-size:.9em;font-weight:600;color:var(--accent-ink);background:var(--accent-soft);padding:.08em .4em;border-radius:4px;}
+  .hanja{color:var(--ink-faint);font-size:.92em;}
+  .chips{display:flex;flex-wrap:wrap;gap:.5rem;margin:0;padding:0;list-style:none;}
+  .chips li{font-family:var(--sans);font-size:.82rem;color:var(--ink-soft);background:var(--accent-soft);border:1px solid var(--line);border-radius:2px;padding:.32rem .62rem;}
+  .foot{margin-top:2.5rem;padding-top:1.6rem;border-top:1px solid var(--line);}
+  .contact{font-family:var(--sans);font-size:.96rem;color:var(--ink-soft);margin:0;line-height:1.75;}
+  .contact a{color:var(--accent-ink);text-decoration:none;border-bottom:1px solid var(--line);}
+  .contact a:hover{border-bottom-color:var(--accent);}
+  .aside{font-family:var(--sans);font-size:.95rem;color:var(--ink-soft);margin:1.1rem 0 0;line-height:1.55;}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <input type="checkbox" id="to-ko" aria-label="한국어로 보기 / View in Korean">
+    <div class="topbar">
+      <label class="toggle" for="to-ko"><span class="en">EN</span><span class="ko">한국어</span></label>
+    </div>
+
+    <div class="content">
+      <!-- ENGLISH -->
+      <div class="lang lang-en">
+        <p class="eyebrow">Digital History · Modern Korean Thought</p>
+        <h1 class="name">Soo Hur<span class="han">허 수</span></h1>
+        <p class="roles">
+          <b>Professor</b>, Department of Korean History, Seoul National University<br>
+          <b>Vice President</b>, Korean Association for Digital Humanities (KADH)
+        </p>
+        <hr>
+        <p class="lead">I'm a historian of modern Korean thought. I study early twentieth-century Korea:
+          the religious thought of Cheondogyo (天道敎, the successor to Donghak 東學) and the discourse of
+          "reconstruction" (改造論). I ask how these ideas arrived through relay translation (重譯) — texts
+          that reached Korea by way of other languages. Lately I also work with AI. I'm building a model of
+          the research process, and a research environment (a workbench) to run it.</p>
+        <blockquote>
+          <p>Delegate the inquiry,<br>hold fast to the interpretation.</p>
+          <p class="src">— The historian's place in the age of AI</p>
+        </blockquote>
+        <section>
+          <p class="label"><span class="mark">01</span> &nbsp;What I build</p>
+          <p><span class="tool">CRISP</span> is the research-process model I built. It has five stages:
+          Collect, Refine, Investigate, Signify, Present. <span class="tool">crisper</span> is the tool that
+          runs it — a research environment, or workbench. It works with sources in Korean or mixed
+          Korean–Hanja (Sino-Korean) script. AI handles the repeatable early stages: collecting, refining,
+          investigating. The historian keeps the interpretation — what the model calls <em>Signify</em>.
+          A firewall separates observation from interpretation, so the machine never replaces the
+          historian's judgment.</p>
+        </section>
+        <section>
+          <p class="label"><span class="mark">02</span> &nbsp;What I'm working on now</p>
+          <p>Right now I'm studying the thinker Yi Ton-hwa <span class="hanja">(李敦化, 1884–1945)</span>.
+          He drew on a Japanese philosophy, "phenomenon-qua-reality" <span class="hanja">(現象卽實在論)</span>,
+          which itself grew out of Western thought. I trace how he selectively brought it into Cheondogyo
+          thought. This is also the live case where I test <span class="tool">crisper</span>.</p>
+        </section>
+        <section>
+          <p class="label">Keywords</p>
+          <ul class="chips">
+            <li>modern Korean intellectual history</li><li>Cheondogyo &amp; Donghak</li>
+            <li>conceptual history</li><li>translation &amp; reception</li>
+            <li>digital history</li><li>AI &amp; historical sources</li>
+          </ul>
+        </section>
+        <footer class="foot">
+          <p class="contact">Soo Hur · Seoul National University<br>
+            <a href="mailto:crctaper@snu.ac.kr">crctaper@snu.ac.kr</a> ·
+            <a href="https://hs-kmhistory.com">hs-kmhistory.com</a></p>
+          <p class="aside">Always glad to talk about digital methods for historical sources. Get in touch.</p>
+        </footer>
+      </div>
+
+      <!-- 한국어 -->
+      <div class="lang lang-ko">
+        <p class="eyebrow">디지털 역사학 · 한국 근대 사상</p>
+        <h1 class="name">허 수<span class="han">許 洙</span></h1>
+        <p class="roles">
+          서울대학교 국사학과 <b>교수</b><br>
+          한국디지털인문학협의회(KADH) <b>부회장</b>
+        </p>
+        <hr>
+        <p class="lead">저는 한국 근대 사상사 연구자입니다. 20세기 초 한반도에서 天道敎(東學의 후신) 종교사상과
+          개조론이 전개된 양상을 「텍스트의 重譯的 수용」이라는 접근을 통해 탐구해 왔습니다. 최근에는 AI와 협업해
+          역사 연구의 과정 모형을 세우는 일, 그리고 이를 구현할 연구 환경(작업대)을 만드는 일에 관심을 기울이고
+          있습니다.</p>
+        <blockquote>
+          <p>탐구는 위임하고,<br>해석은 붙잡는다.</p>
+          <p class="src">— AI 시대 역사가의 자리</p>
+        </blockquote>
+        <section>
+          <p class="label"><span class="mark">01</span> &nbsp;무엇을 만드는가</p>
+          <p>제가 세운 연구 과정 모형 <span class="tool">CRISP</span>는 역사 연구를 다섯 단계—수집·정제·분석·해석·발표—로
+          밟습니다. <span class="tool">crisper</span>는 이를 구현한 연구 환경(작업대)입니다. 한국어나 국한문혼용 사료를
+          대상으로, 발췌·관찰처럼 재현 가능한 앞단은 AI가 맡고, 그 의미를 읽어내는 「해석」은 역사가가 붙잡습니다.
+          관찰과 해석 사이에 경계를 두어, 기계의 관찰이 역사가의 판단을 대신하지 않게 합니다.</p>
+        </section>
+        <section>
+          <p class="label"><span class="mark">02</span> &nbsp;요즘의 연구</p>
+          <p>지금 붙들고 있는 사례는 사상가 이돈화 <span class="hanja">(李敦化, 1884-1945)</span>입니다. 그가 서구 철학의
+          영향으로 형성된 일본의 「현상즉실재론<span class="hanja">(現象卽實在論)</span>」 철학을 천도교 사상 안으로
+          취사선택해 전유(轉有)한 양상을 추적합니다. 이 연구가 곧 <span class="tool">crisper</span>를 실제로 시험하는
+          자리이기도 합니다.</p>
+        </section>
+        <section>
+          <p class="label">키워드</p>
+          <ul class="chips">
+            <li>한국 근대 사상사</li><li>천도교·동학</li>
+            <li>개념사</li><li>번역·수용사</li>
+            <li>디지털 역사학</li><li>AI와 사료</li>
+          </ul>
+        </section>
+        <footer class="foot">
+          <p class="contact">허수 · 서울대학교<br>
+            <a href="mailto:crctaper@snu.ac.kr">crctaper@snu.ac.kr</a> ·
+            <a href="https://hs-kmhistory.com">hs-kmhistory.com</a></p>
+          <p class="aside">사료를 다루는 디지털 방법에 대해 이야기 나누는 걸 늘 반깁니다. 편히 연락 주세요.</p>
+        </footer>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
