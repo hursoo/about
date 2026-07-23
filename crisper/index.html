@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>crisper — A Research Sequence and Its Workbench</title>
+<meta name="description" content="CRISP divides source-based research into five stages; crisper is the workbench that runs it. Concepts and workflow in brief.">
+<meta name="author" content="Soo Hur (허수)">
+<link rel="canonical" href="https://hursoo.github.io/about/crisper/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="crisper — A Research Sequence and Its Workbench">
+<meta property="og:description" content="CRISP divides source-based research into five stages; crisper is the workbench that runs it.">
+<meta property="og:url" content="https://hursoo.github.io/about/crisper/">
+<style>
+  :root {
+    --bg: #EEF0F2; --card: #FCFCFB; --card-2: #F5F6F8;
+    --ink: #1B1F2A; --ink-soft: #454B58; --ink-faint: #868C98;
+    --line: #D9DCE1; --line-strong: #C4C8CF;
+    --indigo: #2B3A78; --indigo-soft: #5B6BAB; --indigo-wash: #E7EAF4;
+    --clay: #A8412A; --clay-soft: #C0633F; --clay-wash: #F3E6E0;
+    --moss: #3E6B4F; --moss-soft: #6E9B7E; --moss-wash: #E4EDE7;
+    --shadow: 0 1px 2px rgba(20,25,40,.06), 0 6px 18px rgba(20,25,40,.05);
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    --sans: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", system-ui, -apple-system, sans-serif;
+    --mono: "SF Mono", "Cascadia Code", "JetBrains Mono", ui-monospace, "D2Coding", monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #13151B; --card: #1C1F28; --card-2: #22262F;
+      --ink: #E8EAEF; --ink-soft: #AAB0BC; --ink-faint: #6E7480;
+      --line: #2B2F3A; --line-strong: #3A3F4B;
+      --indigo: #93A2E6; --indigo-soft: #6E7DBE; --indigo-wash: #23293D;
+      --clay: #E28C72; --clay-soft: #C56A4C; --clay-wash: #34261F;
+      --moss: #8FC2A0; --moss-soft: #5E8C6E; --moss-wash: #1E2B23;
+      --shadow: 0 1px 2px rgba(0,0,0,.30), 0 8px 22px rgba(0,0,0,.28);
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #EEF0F2; --card: #FCFCFB; --card-2: #F5F6F8; --ink: #1B1F2A; --ink-soft: #454B58;
+    --ink-faint: #868C98; --line: #D9DCE1; --line-strong: #C4C8CF; --indigo: #2B3A78;
+    --indigo-soft: #5B6BAB; --indigo-wash: #E7EAF4; --clay: #A8412A; --clay-soft: #C0633F;
+    --clay-wash: #F3E6E0; --moss: #3E6B4F; --moss-soft: #6E9B7E; --moss-wash: #E4EDE7;
+    --shadow: 0 1px 2px rgba(20,25,40,.06), 0 6px 18px rgba(20,25,40,.05);
+  }
+  :root[data-theme="dark"] {
+    --bg: #13151B; --card: #1C1F28; --card-2: #22262F; --ink: #E8EAEF; --ink-soft: #AAB0BC;
+    --ink-faint: #6E7480; --line: #2B2F3A; --line-strong: #3A3F4B; --indigo: #93A2E6;
+    --indigo-soft: #6E7DBE; --indigo-wash: #23293D; --clay: #E28C72; --clay-soft: #C56A4C;
+    --clay-wash: #34261F; --moss: #8FC2A0; --moss-soft: #5E8C6E; --moss-wash: #1E2B23;
+    --shadow: 0 1px 2px rgba(0,0,0,.30), 0 8px 22px rgba(0,0,0,.28);
+  }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+         font-family: var(--sans); line-height: 1.62;
+         -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+  .wrap { max-width: 940px; margin: 0 auto; padding: clamp(22px, 4vw, 44px) clamp(18px, 4vw, 40px) 64px; }
+
+  /* top bar: back link + language toggle */
+  .langbar { display: flex; justify-content: space-between; align-items: center;
+             gap: 14px; flex-wrap: wrap; margin: 0 0 18px; }
+  .back { font-size: .8rem; font-weight: 600; color: var(--ink-faint);
+          text-decoration: none; border-bottom: 1px solid transparent;
+          transition: color .15s, border-color .15s; }
+  .back:hover { color: var(--indigo); border-bottom-color: var(--indigo-soft); }
+  .back .arw { font-family: var(--serif); }
+  .toggle { display: inline-flex; background: var(--card); border: 1px solid var(--line);
+            border-radius: 999px; padding: 3px; box-shadow: var(--shadow); }
+  .toggle button {
+    font-family: var(--sans); font-size: .78rem; font-weight: 700; letter-spacing: .04em;
+    color: var(--ink-faint); background: none; border: 0; cursor: pointer;
+    padding: 6px 16px; border-radius: 999px; transition: background .15s, color .15s;
+  }
+  .toggle button:hover { color: var(--ink); }
+  .toggle button[aria-pressed="true"] { background: var(--indigo); color: #fff; }
+  @media (prefers-color-scheme: dark) { .toggle button[aria-pressed="true"] { color: #12151C; } }
+  :root[data-theme="dark"] .toggle button[aria-pressed="true"] { color: #12151C; }
+  :root[data-theme="light"] .toggle button[aria-pressed="true"] { color: #fff; }
+
+  .doc[hidden] { display: none; }
+
+  .eyebrow { font-size: .7rem; letter-spacing: .22em; text-transform: uppercase;
+             color: var(--indigo); font-weight: 700; margin: 0 0 12px; }
+  h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(1.6rem, 4vw, 2.35rem);
+       line-height: 1.12; letter-spacing: -.01em; margin: 0 0 8px; text-wrap: balance; }
+  .sub { color: var(--ink-faint); font-size: .92rem; margin: 0 0 24px; }
+
+  .thesis { background: var(--card); border: 1px solid var(--line); border-left: 3px solid var(--clay);
+            border-radius: 10px; padding: 17px 20px; box-shadow: var(--shadow); margin: 0 0 34px; }
+  .thesis p { margin: 0; font-size: clamp(.99rem, 2vw, 1.14rem); line-height: 1.5; }
+  .thesis p + p { margin-top: 9px; }
+  .thesis b { color: var(--clay); font-weight: 700; }
+
+  h2 { display: flex; align-items: baseline; gap: 12px; font-family: var(--serif);
+       font-weight: 600; font-size: clamp(1.15rem, 2.6vw, 1.42rem);
+       margin: 40px 0 15px; letter-spacing: -.005em; }
+  h2 .n { font-style: italic; color: var(--clay); font-size: 1.1em; flex: none; }
+  h2::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+  p { margin: 0 0 12px; }
+  p.note { font-size: .88rem; color: var(--ink-soft); }
+  b { font-weight: 700; }
+  code { font-family: var(--mono); font-size: .84em; background: var(--card-2);
+         border: 1px solid var(--line); border-radius: 4px; padding: 1px 5px; }
+
+  /* pipeline */
+  .pipe { display: grid; grid-template-columns: repeat(6, 1fr); gap: 9px; margin: 0 0 14px; }
+  .stage { background: var(--card); border: 1px solid var(--line); border-top: 3px solid var(--indigo);
+           border-radius: 9px; padding: 13px 12px 14px; box-shadow: var(--shadow); }
+  .stage .glyph { font-family: var(--serif); font-size: 1.6rem; line-height: 1; font-weight: 600;
+                  color: var(--indigo); }
+  .stage .kname { font-size: .95rem; font-weight: 700; margin: 6px 0 0; }
+  .stage .ename { font-size: .66rem; letter-spacing: .1em; text-transform: uppercase;
+                  color: var(--ink-faint); margin: 1px 0 8px; font-weight: 600; }
+  .stage .def { font-size: .8rem; color: var(--ink-soft); margin: 0; line-height: 1.5; }
+  .stage.pre { border-top-color: var(--clay); }
+  .stage.pre .glyph { color: var(--clay); }
+
+  /* three layers */
+  .layers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 0 0 14px; }
+  .layer { background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+           padding: 14px 16px 15px; box-shadow: var(--shadow); }
+  .layer .lname { font-family: var(--serif); font-size: 1.08rem; font-weight: 600; margin: 0 0 2px; }
+  .layer .lscale { font-size: .67rem; letter-spacing: .1em; text-transform: uppercase;
+                   color: var(--ink-faint); font-weight: 700; margin: 0 0 8px; }
+  .layer p { font-size: .82rem; color: var(--ink-soft); margin: 0; line-height: 1.55; }
+  .layer.obs { border-top: 3px solid var(--indigo); } .layer.obs .lname { color: var(--indigo); }
+  .layer.com { border-top: 3px solid var(--clay-soft); } .layer.com .lname { color: var(--clay); }
+  .layer.int { border-top: 3px solid var(--moss); } .layer.int .lname { color: var(--moss); }
+
+  .callout { background: var(--indigo-wash); border: 1px solid var(--indigo-soft); border-radius: 9px;
+             padding: 13px 17px; margin: 0 0 12px; font-size: .89rem; line-height: 1.55; }
+  .callout b { color: var(--indigo); }
+  .callout.warm { background: var(--clay-wash); border-color: var(--clay-soft); }
+  .callout.warm b { color: var(--clay); }
+
+  /* two states */
+  .states { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; margin: 0 0 14px; }
+  .state { background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+           padding: 15px 17px 16px; box-shadow: var(--shadow); }
+  .state .fld { font-family: var(--mono); font-size: .88rem; font-weight: 700; margin: 0 0 1px; }
+  .state .who { font-size: .67rem; letter-spacing: .1em; text-transform: uppercase;
+                font-weight: 700; margin: 0 0 9px; }
+  .state h4 { font-size: .97rem; margin: 0 0 5px; }
+  .state p { font-size: .83rem; color: var(--ink-soft); margin: 0; line-height: 1.55; }
+  .state.ai { border-top: 3px solid var(--indigo); }
+  .state.ai .fld, .state.ai .who { color: var(--indigo); }
+  .state.human { border-top: 3px solid var(--clay); }
+  .state.human .fld, .state.human .who { color: var(--clay); }
+
+  /* stack */
+  .stack { display: flex; flex-direction: column; gap: 7px; margin: 0 0 14px; }
+  .tier { display: grid; grid-template-columns: 118px 1fr 112px; gap: 14px; align-items: center;
+          background: var(--card); border: 1px solid var(--line); border-radius: 9px; padding: 12px 16px; }
+  .tier .tname { font-family: var(--serif); font-size: 1.02rem; font-weight: 600; }
+  .tier .twhat { font-size: .83rem; color: var(--ink-soft); line-height: 1.5; }
+  .tier .tswap { font-size: .72rem; font-weight: 700; text-align: right; }
+  .tier.floor { border-left: 3px solid var(--ink-faint); }
+  .tier.floor .tname, .tier.floor .tswap { color: var(--ink-faint); }
+  .tier.bench { border-left: 3px solid var(--clay); background: var(--clay-wash); }
+  .tier.bench .tname, .tier.bench .tswap { color: var(--clay); }
+  .tier.work { border-left: 3px solid var(--moss); }
+  .tier.work .tname, .tier.work .tswap { color: var(--moss); }
+
+  /* split zones */
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; margin: 0 0 13px; }
+  .zone { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+  .zone .zt { font-size: .67rem; letter-spacing: .12em; text-transform: uppercase;
+              font-weight: 700; margin: 0 0 7px; }
+  .zone .zf { font-family: var(--mono); font-size: .78rem; color: var(--ink); line-height: 1.8;
+              white-space: pre-line; }
+  .zone p { font-size: .82rem; color: var(--ink-soft); margin: 8px 0 0; line-height: 1.55; }
+  .zone.share { border-left: 3px solid var(--moss); } .zone.share .zt { color: var(--moss); }
+  .zone.own { border-left: 3px solid var(--clay); } .zone.own .zt { color: var(--clay); }
+
+  .spot { font-family: var(--mono); font-size: .76rem; background: var(--card); border: 1px solid var(--line);
+          border-radius: 8px; padding: 12px 14px; line-height: 1.85; overflow-x: auto;
+          white-space: pre; margin: 0 0 12px; }
+  .spot .hl { color: var(--clay); font-weight: 700; }
+
+  /* table */
+  .tablebox { background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+              box-shadow: var(--shadow); padding: 6px 18px 10px; margin: 0 0 14px; overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; min-width: 460px; font-size: .85rem; }
+  th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--line);
+           vertical-align: top; line-height: 1.5; }
+  th { font-size: .68rem; letter-spacing: .1em; text-transform: uppercase;
+       color: var(--ink-faint); font-weight: 700; }
+  tr:last-child td { border-bottom: none; }
+
+  ul { margin: 0 0 12px; padding-left: 1.15em; }
+  li { margin: 0 0 6px; font-size: .9rem; color: var(--ink-soft); line-height: 1.58; }
+  li b { color: var(--ink); }
+
+  @media (max-width: 780px) {
+    .pipe { grid-template-columns: repeat(3, 1fr); }
+    .layers, .states, .split { grid-template-columns: 1fr; }
+    .tier { grid-template-columns: 96px 1fr; }
+    .tier .tswap { grid-column: 2; text-align: left; }
+  }
+  @media print {
+    body { background: #fff; }
+    .wrap { max-width: none; padding: 0; }
+    .langbar, .back { display: none; }
+    .stage, .layer, .state, .tier, .zone, .tablebox, .thesis, .callout, .spot { box-shadow: none; }
+    h2 { break-after: avoid; }
+    .pipe, .layers, .states, .stack, .split, .tablebox { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="langbar">
+    <a class="back" href="../"><span class="arw">←</span> <span data-t="back">Soo Hur — Research</span></a>
+    <div class="toggle" role="group" aria-label="Language">
+      <button type="button" data-lang="ko" aria-pressed="false">한국어</button>
+      <button type="button" data-lang="en" aria-pressed="true">English</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════ KOREAN ══════════════════════════ -->
+  <div class="doc" id="doc-ko" lang="ko" hidden>
+
+    <p class="eyebrow">CRISP · crisper</p>
+    <h1>연구의 순서와 그 작업대</h1>
+    <p class="sub">개념과 작업 흐름 요약 · 2026-07-24</p>
+
+    <div class="thesis">
+      <p><b>CRISP</b>는 사료를 다루는 연구를 다섯 단계로 나눈 순서이고, <b>crisper</b>는 그 순서대로 일하도록 규칙과 연장을 갖춰 놓은 작업대다.</p>
+      <p>이 방식의 핵심은 한 가지 물음에 있다 — <b>이 주장을 논거로 써도 되는가.</b> 흔한 지식관리 도구는 자료를 잇는 데 능하지만 그 답을 적어 둘 자리가 없고, crisper는 그 자리를 파일 안에 만든다.</p>
+    </div>
+
+    <h2><span class="n">1</span> 다섯 단계와 그 이전의 축</h2>
+    <div class="pipe">
+      <div class="stage pre">
+        <div class="glyph">0</div>
+        <p class="kname">중심</p><p class="ename">Center</p>
+        <p class="def">연구 질문을 세우고 하위질문으로 가른다. 단계가 아니라 전 단계를 관통하는 축.</p>
+      </div>
+      <div class="stage">
+        <div class="glyph">C</div>
+        <p class="kname">수집</p><p class="ename">Collect</p>
+        <p class="def">선행연구와 원 사료를 모은다. 진본은 손대지 않는다.</p>
+      </div>
+      <div class="stage">
+        <div class="glyph">R</div>
+        <p class="kname">정제</p><p class="ename">Refine</p>
+        <p class="def">읽고 인용할 수 있게 만든다. 교정·쪽 주소화.</p>
+      </div>
+      <div class="stage">
+        <div class="glyph">I</div>
+        <p class="kname">분석</p><p class="ename">Investigate</p>
+        <p class="def">잘게 쪼개 관찰한다. 한 구절 = 한 카드.</p>
+      </div>
+      <div class="stage">
+        <div class="glyph">S</div>
+        <p class="kname">해석</p><p class="ename">Signify</p>
+        <p class="def">카드를 가로질러 물음에 답한다.</p>
+      </div>
+      <div class="stage">
+        <div class="glyph">P</div>
+        <p class="kname">발표</p><p class="ename">Present</p>
+        <p class="def">두 잣대로 잰다 — 정합성(물음을 향해) · 소통성(청자를 향해).</p>
+      </div>
+    </div>
+    <p class="note">단계는 폴더로 구현된다. 폴더 이름이 곧 단계 이름이므로, 지금 어느 단계에 있는지가 파일 경로에 드러난다.</p>
+
+    <h2><span class="n">2</span> 관찰 · 논평 · 해석 — 이 방법론의 방화벽</h2>
+    <p>판정이 기술인 척 기록에 섞이면 나중에 되짚을 수 없다. 그래서 의미를 붙이는 행위를 세 층위로 갈라 각각 다른 자리에 적는다.</p>
+    <div class="layers">
+      <div class="layer obs">
+        <p class="lname">관찰</p><p class="lscale">기술 · 재현 가능</p>
+        <p>자료에 무엇이 있는가를 <b>누가 해도 같게</b> 적는다. 검증의 대상이다.</p>
+      </div>
+      <div class="layer com">
+        <p class="lname">논평</p><p class="lscale">의미화 · 조각</p>
+        <p>이 <b>한 구절</b>이 무엇을 뜻하는가. 단정할 수 있으나 근거가 눈앞의 구절에 한정된다.</p>
+      </div>
+      <div class="layer int">
+        <p class="lname">해석</p><p class="lscale">의미화 · 물음</p>
+        <p>구절들 <b>사이의 배치</b> — 대조 · 계단 · 부재. 어느 한 조각도 혼자 떠받치지 못한다.</p>
+      </div>
+    </div>
+    <p class="note">해석은 논평의 합이 아니다. 부재("이 이름이 코퍼스에 0회")나 궤적(시점의 계단) 같은 대상은 조각 규모에 존재하지 않고 해석에서만 산출된다.</p>
+    <div class="callout warm">
+      <b>예시 한 줄.</b> 어떤 개념어가 1926년 글에 처음 나타나고, 그 개념의 주창자 이름은 1931년에야 등장한다. <b>여기까지가 관찰이다.</b> "이름을 일부러 피한 것인가"는 해석이며, 다른 자리에 적는다.
+    </div>
+
+    <h2><span class="n">3</span> 작업대 — 규칙과 연장의 묶음</h2>
+    <p>폴더 규칙 · 카드 형식 · 표시 방법(규칙)과 편집기 · 변환 도구 · 버전 관리(연장)가 한 덩어리로 건네지고, 사용자는 이를 통째로 복제해 받는다.</p>
+    <p><b>프로그램이 아니다.</b> 앱 없이 손으로 전 과정을 재현하는 시험을 먼저 거쳤고, 불편한 지점은 하나뿐이었으며 그것도 링크로 해소됐다. 프로그램이 필요하다는 증거가 나오지 않아 파일과 규칙으로 남겼다.</p>
+    <div class="stack">
+      <div class="tier floor">
+        <div class="tname">바닥</div>
+        <div class="twhat">편집기 · AI 도구 · 버전 관리</div>
+        <div class="tswap">교체 가능</div>
+      </div>
+      <div class="tier bench">
+        <div class="tname">작업대</div>
+        <div class="twhat">폴더 규칙 · 카드 형식 · 두 상태 · 계량</div>
+        <div class="tswap">이것이 정체</div>
+      </div>
+      <div class="tier work">
+        <div class="tname">작업물</div>
+        <div class="twhat">정제본 · 카드 · 원고</div>
+        <div class="tswap">각자의 것</div>
+      </div>
+    </div>
+    <p class="note">바닥을 갈아끼워도 작업대는 살아남아야 한다. 프로그램으로 만들었다면 둘이 한 덩어리라 갈아끼울 수 없었을 것이다.</p>
+
+    <h2><span class="n">4</span> 두 상태 — 작업대의 심장</h2>
+    <div class="spot">collated:  false   <span class="hl"># 발췌가 원문과 일치하는가   — AI가 채운다</span>
+confirmed: false   <span class="hl"># 이 카드를 논거로 써도 되는가 — 사람만 채운다</span></div>
+    <div class="states">
+      <div class="state ai">
+        <p class="fld">collated</p><p class="who">대조 · 위임 가능</p>
+        <h4>인용문과 쪽수가 진본과 같은가</h4>
+        <p>원본을 열어 맞춰 보면 끝나고 <b>누가 해도 답이 같다.</b> 필요한 이유는 실제로 자주 틀리기 때문이다.</p>
+      </div>
+      <div class="state human">
+        <p class="fld">confirmed</p><p class="who">확정 · 위임 불가</p>
+        <h4>이 카드를 논거로 삼아도 되는가</h4>
+        <p>AI는 관찰하고 비교하고 패턴에 이름까지 붙이되, <b>확정하지 않는다.</b></p>
+      </div>
+    </div>
+    <p><b>왜 나누는가.</b> 대조는 위임할 수 있는 노동이고 확정은 그렇지 않다. 한 필드에 묶으면 위임 가능한 일이 사람의 판단이라는 병목 뒤에 줄을 선다. 나누면 AI가 갈 수 있는 데까지 먼저 가고, 사람은 판단만 남겨 받는다.</p>
+    <div class="callout">
+      이 구조는 <b>AI 사용의 표시 방식</b>이기도 하다. "AI를 얼마나 썼는가"를 자기신고로 받는 대신, 기계가 한 일과 사람이 한 일이 파일에 나뉘어 새겨진다.
+    </div>
+
+    <h2><span class="n">5</span> 계량 — 막지 않고 보이게 한다</h2>
+    <p>요건 미충족을 이유로 다음 단계를 막지 않는다. 대신 <b>미결의 위치와 양이 항상 보이게</b> 한다. 하위질문별로 카드 수와 확정 수를 세면 표 하나가 나오고, 그 표의 빈칸이 다음에 할 일을 알려 준다.</p>
+    <div class="callout warm">
+      <b>빈칸은 실패가 아니라 발견이다.</b> 어떤 하위질문에 카드가 하나도 없다는 것은, 그 방향의 자료를 아직 들이지 않았다는 사실이 수치로 드러난 것이다. 확정 수가 낮은 것도 마찬가지다 — 확정은 밀린 숙제가 아니라 <b>인용하기 직전의 행위</b>이므로, 아직 쓰지 않은 카드가 미확정으로 남는 것은 정상이다.
+    </div>
+
+    <h2><span class="n">6</span> 물음이 여럿일 때 — 자료는 하나, 작업대는 여럿</h2>
+    <p>물음이 바뀌면 하위질문이 바뀌고 그 위의 모든 것이 바뀐다. 그래서 작업대는 물음마다 새로 놓는다. 다만 모아 둔 자료와 손봐 둔 정제본은 다음 물음이 그대로 물려받는다.</p>
+    <div class="split">
+      <div class="zone share">
+        <p class="zt">공용 — 누적되고 승계된다</p>
+        <div class="zf">C · R
+1_수집 / 2_정제</div>
+        <p>한 번 모으고 한 번 교정한 것은 어느 물음이 와도 같다. 사람 손이 들어간 자산이므로 두 벌 만들지 않는다.</p>
+      </div>
+      <div class="zone own">
+        <p class="zt">물음별 — 닫히고 통약 불가</p>
+        <div class="zf">0 · I · S · P
+0_중심 / 3_분석 / 4_해석 / 5_발표</div>
+        <p>발췌 · 해석 · 구성은 그 물음의 것이다. 물음이 다르면 자르는 자리가 다르다.</p>
+      </div>
+    </div>
+    <p>작업 중에 두 물음은 서로를 <b>전혀 모른다.</b> 다른 프로젝트를 고려하라는 부담을 지우지 않는다 — 규칙이 사람의 기억에 의존하면 그 규칙은 지켜지지 않기 때문이다. 연결은 나중에 <b>파일 이름만 읽어서</b> 만든다. 이름 규칙이 이미 「원천 + 쪽」을 품고 있으므로 공짜다.</p>
+    <div class="spot">물음A/3_분석/<span class="hl">이돈화1931-p97</span>_생명충동.md
+물음B/3_분석/<span class="hl">이돈화1931-p97</span>_아_비아.md
+                └── 같은 「자리」 = 원천 + 쪽 ──┘</div>
+    <p class="note">그렇게 얻은 지도는 셋을 보여준다. <b>겹치는 자리</b>(그 대목이 정말 중요하거나, 내가 늘 거기만 본다는 뜻이거나) · <b>한 번만 다녀간 자리</b>(새 물음을 시작할 때 남의 카드가 아니라 내 예전 카드를 읽고 출발하게 된다) · <b>빈 구간</b>(아직 아무도 읽지 않은 곳).</p>
+
+    <h2><span class="n">7</span> 위치와 한계</h2>
+    <div class="tablebox">
+      <table>
+        <tr><th></th><th>흔한 지식관리</th><th>작업대</th></tr>
+        <tr>
+          <td><b>핵심</b></td>
+          <td>연결</td>
+          <td><b>확정</b></td>
+        </tr>
+        <tr>
+          <td><b>자라는 방향</b></td>
+          <td>링크가 늘수록 그래프가 조밀해진다 — 넓이</td>
+          <td>같은 자료가 여러 물음에서 다시 논거로 선다 — 깊이</td>
+        </tr>
+        <tr>
+          <td><b>약점</b></td>
+          <td>링크는 틀린 것도 똑같이 잘 잇는다. 검증 여부를 적을 자리가 없다</td>
+          <td>이 축은 작업대를 나누어야 비로소 생긴다</td>
+        </tr>
+      </table>
+    </div>
+    <ul>
+      <li><b>안 맞는 경우.</b> 대조할 원본이 없는 일(창작 · 순수 이론)에서는 절반이 공회전한다. 짧게 끝나는 일에 규약을 얹으면 방해가 된다. 여러 해에 걸쳐 쌓이거나 여럿이 나눠 쓸 때 본전을 뽑는다.</li>
+      <li><b>남는 한계.</b> 계량은 병목을 없애지 않는다. 확정하는 노동이 실제로 일어나지 않으면 이 작업대는 "미확정 카드가 잘 정리된 창고"가 된다. 지금보다 정확하지만 같은 병에 걸린.</li>
+    </ul>
+
+  </div>
+
+  <!-- ══════════════════════════ ENGLISH ══════════════════════════ -->
+  <div class="doc" id="doc-en" lang="en">
+
+    <p class="eyebrow">CRISP · crisper</p>
+    <h1>A Research Sequence and Its Workbench</h1>
+    <p class="sub">Concepts and workflow in brief · 24 July 2026</p>
+
+    <div class="thesis">
+      <p><b>CRISP</b> divides source-based research into five stages; <b>crisper</b> is the workbench that lets you work in that sequence, handing over rules and tools together.</p>
+      <p>Everything here turns on a single question — <b>may this claim be used as evidence?</b> Ordinary knowledge-management tools are good at connecting material but have no place to record the answer; crisper puts that place inside the file itself.</p>
+    </div>
+
+    <h2><span class="n">1</span> Five stages, and the axis that precedes them</h2>
+    <div class="pipe">
+      <div class="stage pre">
+        <div class="glyph">0</div>
+        <p class="kname">Center</p><p class="ename">중심</p>
+        <p class="def">Set the research question, split it into sub-questions. Not a stage but an axis running through all of them.</p>
+      </div>
+      <div class="stage">
+        <div class="glyph">C</div>
+        <p class="kname">Collect</p><p class="ename">수집</p>
+        <p class="def">Gather prior scholarship and primary sources. The original is never altered.</p>
+      </div>
+      <div class="stage">
+        <div class="glyph">R</div>
+        <p class="kname">Refine</p><p class="ename">정제</p>
+        <p class="def">Make the text readable and citable — correction, page-addressing.</p>
+      </div>
+      <div class="stage">
+        <div class="glyph">I</div>
+        <p class="kname">Investigate</p><p class="ename">분석</p>
+        <p class="def">Break it small and observe. One passage = one card.</p>
+      </div>
+      <div class="stage">
+        <div class="glyph">S</div>
+        <p class="kname">Signify</p><p class="ename">해석</p>
+        <p class="def">Cut across the cards to answer the question.</p>
+      </div>
+      <div class="stage">
+        <div class="glyph">P</div>
+        <p class="kname">Present</p><p class="ename">발표</p>
+        <p class="def">Two standards — coherence (toward the question), communicability (toward the audience).</p>
+      </div>
+    </div>
+    <p class="note">Stages are implemented as folders. Because the folder names are the stage names, where you currently are is visible in the file path.</p>
+
+    <h2><span class="n">2</span> Observation · Commentary · Interpretation — the firewall</h2>
+    <p>If a judgment slips into the record disguised as description, there is no way to retrace it later. So the act of assigning meaning is split into three levels, each written in a different place.</p>
+    <div class="layers">
+      <div class="layer obs">
+        <p class="lname">Observation</p><p class="lscale">descriptive · reproducible</p>
+        <p>What is in the source, written so that <b>anyone would write the same thing.</b> Subject to verification.</p>
+      </div>
+      <div class="layer com">
+        <p class="lname">Commentary</p><p class="lscale">meaning-making · fragment</p>
+        <p>What <b>this one passage</b> means. Assertible, but the evidence is confined to the passage in front of you.</p>
+      </div>
+      <div class="layer int">
+        <p class="lname">Interpretation</p><p class="lscale">meaning-making · question</p>
+        <p>The <b>arrangement between passages</b> — contrast, sequence, absence. No single fragment can carry it alone.</p>
+      </div>
+    </div>
+    <p class="note">Interpretation is not the sum of the commentaries. Objects such as an absence ("this name occurs 0 times in the corpus") or a trajectory (a step-change in dating) do not exist at the scale of the fragment; they are produced only in interpretation.</p>
+    <div class="callout warm">
+      <b>A one-line example.</b> A concept term first appears in a text of 1926, while the name of the thinker who coined it appears only in 1931. <b>That much is observation.</b> "Was the name deliberately avoided?" is interpretation, and it is written elsewhere.
+    </div>
+
+    <h2><span class="n">3</span> The workbench — rules and tools as one bundle</h2>
+    <p>Folder conventions, card format and status markers (the rules) together with editor, conversion tools and version control (the tools) are handed over as a single bundle, which the user receives by copying it whole.</p>
+    <p><b>It is not an application.</b> We first ran the whole process by hand, without any app. Exactly one point of friction turned up, and a link resolved it. No evidence emerged that a program was needed, so it stayed as files and rules.</p>
+    <div class="stack">
+      <div class="tier floor">
+        <div class="tname">Floor</div>
+        <div class="twhat">editor · AI tools · version control</div>
+        <div class="tswap">swappable</div>
+      </div>
+      <div class="tier bench">
+        <div class="tname">Workbench</div>
+        <div class="twhat">folder conventions · card format · the two states · metrics</div>
+        <div class="tswap">the identity</div>
+      </div>
+      <div class="tier work">
+        <div class="tname">Work</div>
+        <div class="twhat">refined texts · cards · manuscripts</div>
+        <div class="tswap">each one's own</div>
+      </div>
+    </div>
+    <p class="note">The workbench must survive having the floor swapped out. Had it been built as a program, floor and workbench would be one piece and could not be separated.</p>
+
+    <h2><span class="n">4</span> Two states — the heart of the workbench</h2>
+    <div class="spot">collated:  false   <span class="hl"># does the excerpt match the original?  — filled by AI</span>
+confirmed: false   <span class="hl"># may this card be used as evidence?    — filled only by a person</span></div>
+    <div class="states">
+      <div class="state ai">
+        <p class="fld">collated</p><p class="who">collation · delegable</p>
+        <h4>Do the quotation and page match the original?</h4>
+        <p>Open the original and check; <b>anyone arrives at the same answer.</b> It is needed because this actually goes wrong often.</p>
+      </div>
+      <div class="state human">
+        <p class="fld">confirmed</p><p class="who">confirmation · not delegable</p>
+        <h4>May this card serve as evidence?</h4>
+        <p>AI may observe, compare, and even name patterns, but <b>it does not confirm.</b></p>
+      </div>
+    </div>
+    <p><b>Why they are split.</b> Collation is labor that can be delegated; confirmation is not. Bound into a single field, the delegable work queues up behind the bottleneck of human judgment. Split, the AI goes as far as it can and the person is left holding judgment alone.</p>
+    <div class="callout">
+      The same structure doubles as a <b>record of AI use</b>. Instead of a self-reported "how much AI did you use," what the machine did and what the person did are inscribed separately in the file.
+    </div>
+
+    <h2><span class="n">5</span> Metrics — a display, not a gate</h2>
+    <p>An unmet requirement does not block the next stage. Instead, <b>the location and the quantity of what remains unsettled stay visible.</b> Counting cards and confirmations per sub-question yields a table, and the blanks in that table tell you what to do next.</p>
+    <div class="callout warm">
+      <b>A blank is a finding, not a failure.</b> A sub-question with no cards at all means that no material has yet been brought in for that direction — and now that fact is a number. A low confirmation count says the same thing: confirmation is not homework in arrears but <b>the act immediately preceding citation</b>, so cards not yet cited remaining unconfirmed is normal.
+    </div>
+
+    <h2><span class="n">6</span> Several questions — one body of material, many workbenches</h2>
+    <p>When the question changes, the sub-questions change and everything above them changes with them. So a new workbench is set up for each question. What has been gathered and what has been corrected, however, pass to the next question unchanged.</p>
+    <div class="split">
+      <div class="zone share">
+        <p class="zt">Shared — accumulates, is inherited</p>
+        <div class="zf">C · R
+1_collect / 2_refine</div>
+        <p>Gathered once and corrected once, it is the same whatever question arrives. It carries human labor, so it is never made twice.</p>
+      </div>
+      <div class="zone own">
+        <p class="zt">Per question — closes, incommensurable</p>
+        <div class="zf">0 · I · S · P
+center / investigate / signify / present</div>
+        <p>Excerpts, interpretation and composition belong to that question. A different question cuts the material in a different place.</p>
+      </div>
+    </div>
+    <p>While work is under way the two questions <b>know nothing of each other.</b> No burden is placed on the researcher to keep other projects in mind — because a rule that depends on human memory is a rule that will not be kept. The connection is made afterwards <b>by reading file names alone.</b> The naming convention already carries source and page, so it costs nothing.</p>
+    <div class="spot">question-A/investigate/<span class="hl">YiDonhwa1931-p97</span>_elan.md
+question-B/investigate/<span class="hl">YiDonhwa1931-p97</span>_self-and-other.md
+                       └── the same "site" = source + page ──┘</div>
+    <p class="note">The resulting map shows three things. <b>Sites with heavy overlap</b> — either the passage really matters, or this is where I always look. <b>Sites visited once</b> — starting a new question here means reading my own earlier cards rather than someone else's. <b>Empty stretches</b> — pages no one has read yet.</p>
+
+    <h2><span class="n">7</span> Where it sits, and what it does not do</h2>
+    <div class="tablebox">
+      <table>
+        <tr><th></th><th>Ordinary knowledge management</th><th>The workbench</th></tr>
+        <tr>
+          <td><b>Core</b></td>
+          <td>connection</td>
+          <td><b>confirmation</b></td>
+        </tr>
+        <tr>
+          <td><b>Direction of growth</b></td>
+          <td>more links, a denser graph — breadth</td>
+          <td>the same material standing as evidence in one question after another — depth</td>
+        </tr>
+        <tr>
+          <td><b>Weak point</b></td>
+          <td>a link joins the false as neatly as the true; no place to record whether it was verified</td>
+          <td>this axis appears only once the workbenches are separated</td>
+        </tr>
+      </table>
+    </div>
+    <ul>
+      <li><b>Where it does not fit.</b> Work with no original to collate against — creative writing, pure theory — leaves half the machinery idling. Laying conventions over a three-day assignment is simply an obstacle. It repays the effort when work accumulates over years, or is shared among several people.</li>
+      <li><b>The limit that remains.</b> Metrics do not remove the bottleneck. If the labor of confirming never actually happens, the workbench becomes "a well-organized warehouse of unconfirmed cards" — more accurate than before, and ill with the same disease.</li>
+    </ul>
+
+  </div>
+
+</div>
+
+<script>
+  (function () {
+    var docs = { ko: document.getElementById('doc-ko'), en: document.getElementById('doc-en') };
+    var btns = document.querySelectorAll('.toggle button');
+    var back = document.querySelector('.back [data-t="back"]');
+    var TITLE = { en: 'crisper — A Research Sequence and Its Workbench',
+                  ko: 'crisper 개요 — 연구의 순서와 그 작업대' };
+    var BACK  = { en: 'Soo Hur — Research', ko: '허수 — 연구 소개' };
+
+    function set(lang) {
+      docs.ko.hidden = lang !== 'ko';
+      docs.en.hidden = lang !== 'en';
+      document.documentElement.lang = lang;
+      document.title = TITLE[lang];
+      if (back) back.textContent = BACK[lang];
+      btns.forEach(function (b) {
+        b.setAttribute('aria-pressed', String(b.dataset.lang === lang));
+      });
+      try { localStorage.setItem('crisper-brief-lang', lang); } catch (e) {}
+    }
+
+    btns.forEach(function (b) {
+      b.addEventListener('click', function () { set(b.dataset.lang); });
+    });
+
+    // URL parameter wins (so /about/ can hand over the reader's language),
+    // then a previously remembered choice, then English.
+    var param = new URLSearchParams(location.search).get('lang');
+    var saved = null;
+    try { saved = localStorage.getItem('crisper-brief-lang'); } catch (e) {}
+    set(param === 'ko' || param === 'en' ? param : (saved === 'ko' ? 'ko' : 'en'));
+  })();
+</script>
+</body>
+</html>
